@@ -16,10 +16,38 @@ Download Chitgab from Google Play
 Currently only working when two devices are on the same wifi since we have disabled PEERServer
 
 
+### Make Android-to-Android calls using the Chitgab app
 
+### Make PC-to-Android or PC-to-PC calls using our API
+to make PC-to-Android or PC-to-PC calls first make a POST Request to
 
+```
+https://chatbe1285.azurewebsites.net/api/auth/Login
 
+body {
+    "Username": "your_username",
+    "HashedPW":"your_PW", // Plainttext NOT hashed
+    "DeviceId":"" //Leave empty
+}
+```
 
+Once you have the Bearer token simply open our frontend and insert it as a Cookie
+
+```
+URL: https://chatfe5415.azurewebsites.net/call/
+Cookie
+sessionId: ebeayJhbGciO....
+```
+
+In order to make a call you have to define your username and the target username in a querystring
+if however you are receiving a call only your username is needed
+
+```
+https://chatfe5415.azurewebsites.net/call/?key=adam&callerkey=brian //call someone
+https://chatfe5415.azurewebsites.net/call/?key=adam //receiving a call
+```
+
+ 
 # Technical Architecture
 ### Client Layer (Android) 
 Built with .NET MAUI in C# and .NET9.
