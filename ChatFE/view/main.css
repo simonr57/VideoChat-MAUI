@@ -1,0 +1,162 @@
+body {
+	margin: 0;
+	background-color: #fff;
+	color: #fff;
+	font-family: Monospace;
+	font-size: 13px;
+	line-height: 24px;
+	overscroll-behavior: none;
+}
+
+  /* Basic CSS for the loading spinner */
+  .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #000;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+#sidebar {
+	position: absolute;
+	width: 200px;
+	height: 90px;
+
+
+	box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .chat-input-container {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	background-color: #f0f0f0;
+	padding: 10px;
+	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style for the input box */
+  .chat-input {
+	width: 80%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-right: 10px;
+	box-sizing: border-box;
+  }
+  
+  /* Style for the submit button */
+  .chat-submit-button {
+	padding: 10px 20px;
+	font-size: 16px;
+	color: #fff;
+	background-color: #007bff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+  }
+  
+  .chat-submit-button:hover {
+	background-color: #0056b3;
+  }
+
+  #OnOpenKeyboard {
+	position: relative; /* or absolute, depending on your layout needs */
+
+  }
+  canvas {
+	display: block; /* Removes any default canvas margin */
+	
+
+  }
+  
+a {
+	color: #ff0;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+/* #info {
+	position: absolute;
+	top: 10px;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: center;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	z-index: 1; /* TODO Solve this in HTML */
+}
+
+a, button, input, select {
+	pointer-events: auto;
+}
+
+.lil-gui {
+	z-index: 2 !important; /* TODO Solve this in HTML */
+} */
+
+@media all and ( max-width: 640px ) {
+	.lil-gui.root { 
+		right: auto;
+		top: auto;
+		max-height: 50%;
+		max-width: 80%;
+		bottom: 0;
+		left: 0;
+	}
+}
+
+#overlay {
+	position: absolute;
+	font-size: 16px;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background: rgba(0,0,0,0.7);
+}
+
+	#overlay button {
+		background: transparent;
+		border: 0;
+		border: 1px solid rgb(255, 255, 255);
+		border-radius: 4px;
+		color: #ffffff;
+		padding: 12px 18px;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+#notSupported {
+	width: 50%;
+	margin: auto;
+	background-color: #f00;
+	margin-top: 20px;
+	padding: 10px;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="ChatApp.CharsPopup">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Fullscreen WebView -->
+        <WebView x:Name="store"
+                 Grid.RowSpan="2"
+                 Source="https://your-frontend-url.net/view/store.html?danceType=Charc1__Running__"
+                 HorizontalOptions="FillAndExpand"
+                 VerticalOptions="FillAndExpand" />
+
+    </Grid>
+</toolkit:Popup>

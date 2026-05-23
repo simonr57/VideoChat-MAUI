@@ -1,0 +1,63 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.FindFriends"
+             BackgroundColor="Black">
+
+    <Grid>
+        <StackLayout Padding="10" Spacing="10">
+            <!-- Search Box -->
+            <Entry x:Name="textInput" Placeholder="Search by username" TextColor="WhiteSmoke"
+               TextChanged="OnTextChanged"
+                />
+
+            <!-- Scrollable List of Users -->
+            <ScrollView>
+                <CollectionView x:Name="OnlineUsersListView" 
+                            VerticalOptions="FillAndExpand">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="5" ColumnSpacing="10">
+                                <!-- Define columns for layout -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- User Image -->
+                                <Frame Grid.Column="0"
+                               WidthRequest="60"
+                               HeightRequest="60"
+                               CornerRadius="60"  
+                                   
+                                IsClippedToBounds="True"
+                                   Padding="0"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   >
+
+                                    <Image
+                                  Source="{Binding ImageSource}" />
+                                </Frame>
+                                <!-- Username Label -->
+                                <Label Grid.Column="1"
+                                Text="{Binding Username}"
+                                TextColor="WhiteSmoke"
+                                VerticalOptions="Center"
+                                FontSize="Medium" />
+
+                                <!-- Chat Button -->
+                                <Button Grid.Column="2"
+                                Text="Add Friend"
+                                Clicked="OnAddFriendButtonClicked"
+                                CommandParameter="{Binding .}"
+                                FontSize="Small"
+                                Padding="5, 0" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </StackLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ChitGab - Video Call</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet">
+    <!-- CSS Libraries -->
+    <link href="lib/icomoon/style.css" rel="stylesheet">
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="lib/alertifyjs/build/css/alertify.min.css" rel="stylesheet">
+    <link href="lib/alertifyjs/build/css/themes/default.min.css" rel="stylesheet">
+    <link href="Content/css/Custom.css" rel="stylesheet">
+</head>
+<body data-mode="idle">
+    <!-- Container for 3D model -->
+    <div class="containerClass" id="container"></div>
+
+    <!-- Call Modal -->
+    <div id="callModal" class="call-modal">
+        <div class="call-modal-content">
+            <div class="call-modal-header">
+                <span id="callerName" class="caller-name"></span> is calling...
+            </div>
+            <div class="call-modal-actions">
+                <button id="acceptCall" class="accept-button">Accept</button>
+                <button id="declineCall" class="decline-button">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main role="main" class="main-content">
+            <!-- Video containers -->
+            <div class="video-container">
+                <div class="remote-video-container">
+                    <video id="remoteVideo" class="video partner" autoplay playsinline poster="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBA=="></video>
+                    <div class="video-label"></div>
+                </div>
+                <div class="local-video-container">
+                    <video id="localVideo" class="video self" autoplay playsinline poster="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBA==" muted></video>
+                    <div class="video-label"></div>
+                </div>
+            </div>
+            
+            <!-- Call info -->
+            <div class="call-info">
+                <div class="caller-name" id="upperUsername">Username</div>
+                <div id="callstatus" class="status">Idle</div>
+            </div>
+            
+            <!-- Call Image (shown when ringing) -->
+            <div class="callImg"><img src="Content/img/pc.png"></div>
+            
+             <!-- In Call Actions -->
+            <div class="actions">
+                <button class="action-btn toggle-video">📷<i class="icon-video-camera"></i></button>
+                <button class="action-btn toggle-speaker">🎙️<i class="icon-speaker"></i></button>
+                <button class="action-btn toggle-audio">🔇<i class="icon-microphone"></i></button>
+                <button class="action-btn swap-videos" title="Swap video positions">⚡<i class="icon-swap"></i></button>
+                <button class="action-btn switch-camera" title="Switch camera">🎥<i class="icon-camera"></i></button>
+                <button class="action-btn hangup">☎️<i class="icon-phone"></i></button>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Libraries -->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="lib/alertifyjs/build/alertify.min.js"></script>
+    <script src="Content/js/utilsRTC.js"></script>
+    <script src="Content/js/constWebRTC.js"></script>
+    <script src="lib/adapter/adapter.min.js"></script>
+    <script src="Content/js/connectionHub.js"></script>
+    
+
+
+	
+</body>
+</html>

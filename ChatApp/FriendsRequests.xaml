@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.FriendsRequests"
+             BackgroundColor="Black">
+    <Grid x:Name="MainGrid" BackgroundColor="Black">
+        <StackLayout Padding="10" Spacing="10">
+            <!-- Scrollable List of Users -->
+            <ScrollView>
+                <CollectionView x:Name="OnlineUsersListView" ItemsSource="{Binding OnlineUsers}"
+                            VerticalOptions="FillAndExpand">
+
+                    <CollectionView.EmptyView>
+                        <Label Text="No friend requests yet :(" 
+                       HorizontalOptions="Center"
+                           TextColor="White"
+                       VerticalOptions="Center"
+                       FontSize="Medium"/>
+                    </CollectionView.EmptyView>
+
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="5" ColumnSpacing="10">
+                                <!-- Define columns for layout -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Frame Grid.Column="0"
+                         WidthRequest="60"
+                         HeightRequest="60"
+                         CornerRadius="60"  
+                             
+                          IsClippedToBounds="True"
+                             Padding="0"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center">
+
+                                    <Image
+                             Source="{Binding ImageSource}" />
+                                </Frame>
+
+                                <Label Grid.Column="1"
+                                   Text="{Binding Username}"
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   FontSize="Medium">
+
+
+                                </Label>
+
+                                <Button Grid.Column="2"
+                                    Text="Add"
+                                    
+                                    Clicked="OnAddFriendButtonClicked"
+                                    CommandParameter="{Binding Username}"
+                                            BackgroundColor="White"
+                                    FontSize="Small"
+                                   />
+
+                                <Button Grid.Column="3"
+                                    Text="Remove"
+                                    Clicked="OnRemoveFriendButtonClicked"
+                                    BackgroundColor="White"
+                                    CommandParameter="{Binding Username}"
+                                    FontSize="Small"
+                                     />
+
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+
+        </StackLayout>
+    </Grid>
+</ContentPage>

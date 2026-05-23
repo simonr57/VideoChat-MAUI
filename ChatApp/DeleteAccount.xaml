@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.DeleteAccount"
+             BackgroundColor="Black"
+             Title="Delete Account">
+
+    <Grid>
+
+        <VerticalStackLayout Padding="20" Spacing="25">
+            <Label 
+            Text="By clicking Delete Account all your account data will be deleted and can not be recovered!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+            <Button 
+            Text="Delete Account"
+            BackgroundColor="Red"
+            TextColor="White"
+            Clicked="OnDeleteAccountClicked"
+            HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

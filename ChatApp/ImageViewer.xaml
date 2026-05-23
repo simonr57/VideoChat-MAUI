@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="ChatApp.ImageViewer">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="0" BackgroundColor="Black">
+
+            <!-- Story-style progress bar -->
+            <Grid Grid.Row="0" Padding="10">
+                <Grid x:Name="ProgressContainer"
+                  BackgroundColor="Gray"
+                  HeightRequest="4"
+                  VerticalOptions="Center">
+
+                    <BoxView x:Name="ProgressFill"
+                         BackgroundColor="#ffbf00"
+                         HorizontalOptions="Start"
+                         WidthRequest="0" />
+                </Grid>
+            </Grid>
+            <Grid Padding="10">
+
+                <Image x:Name="DynamicImage"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       MaximumWidthRequest="800"
+                       MaximumHeightRequest="800" />
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</toolkit:Popup>

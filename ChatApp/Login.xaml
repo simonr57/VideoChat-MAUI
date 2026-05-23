@@ -1,0 +1,25 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundColor="Black"            
+             x:Class="ChatApp.Login">
+    <Grid>
+
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <Button Text="Login"
+                    BackgroundColor="White"
+                    WidthRequest="200"
+                    Margin="10"
+                    TextColor="Black"
+                     Clicked="OnSelectClicked" 
+                    CommandParameter="Login"
+                    HeightRequest="50" />
+            <Button Text="Register"
+                    WidthRequest="200"
+                         BackgroundColor="White"
+                    TextColor="Black"
+                     Clicked="OnSelectClicked" 
+                    CommandParameter="Register"
+                    HeightRequest="50" />
+        </StackLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.ContactListVy"
+             BackgroundColor="Black"
+             Title="Contacts">
+    <StackLayout Padding="10" Spacing="10">
+
+        <CollectionView x:Name="OnlineUsersListView" ItemsSource="{Binding OnlineUsers}"
+                            VerticalOptions="FillAndExpand">
+
+            <CollectionView.EmptyView>
+                <Label Text="Please wait while loading..." 
+                       HorizontalOptions="Center"
+                           TextColor="White"
+                       VerticalOptions="Center"
+                       FontSize="Medium"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="5" ColumnSpacing="10">
+                        <!-- Define columns for layout -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="1"
+                                   Text="{Binding DisplayName}"
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   FontSize="Medium">
+
+
+                        </Label>
+                        <Button Grid.Column="3"
+                                    Text="Invite"
+                                Clicked="OnShareClicked"
+                                    BackgroundColor="White"
+                                    FontSize="Small"
+                                     />
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+        <ActivityIndicator 
+           x:Name="LoadingIndicator"
+           IsRunning="False"
+           IsVisible="False"
+           Color="Black"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           WidthRequest="50"
+           HeightRequest="50"
+  
+       />
+
+    </StackLayout>
+</ContentPage>

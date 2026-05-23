@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>   
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.PinSetup"
+             BackgroundColor="Black"
+             Padding="20">
+
+    <VerticalStackLayout Spacing="20">
+
+        <Entry x:Name="PinInput"
+     Placeholder="Enter PIN"
+     PlaceholderColor="Gray"
+     TextColor="White"
+     BackgroundColor="#222"
+     HeightRequest="55"
+     WidthRequest="220"
+     IsVisible="False"
+     HorizontalOptions="Center"
+     VerticalOptions="CenterAndExpand"
+     FontSize="20"
+     HorizontalTextAlignment="Center"
+         Completed="PinInput_Completed"
+     />
+        
+        <!-- Toggle -->
+        <HorizontalStackLayout x:Name="t1" Spacing="10">
+            <Label Text="Enable Pin and Destruction Code"
+                   TextColor="White"
+                   VerticalOptions="Center" />
+            <Switch x:Name="PinToggle"
+                    Toggled="PinToggle_Toggled"/>
+        </HorizontalStackLayout>
+
+        <!-- PIN Setup Section -->
+        <VerticalStackLayout x:Name="PinSection" IsVisible="false" Spacing="10">
+            <Label Text="Setup PIN Code"
+                   FontSize="16"
+                   TextColor="White" />
+
+            <Entry x:Name="PinEntry"
+                   Placeholder="Enter PIN"
+                   PlaceholderColor="Gray"
+                   TextColor="White"
+                   BackgroundColor="#222"
+                   />
+        </VerticalStackLayout>
+
+        <!-- Destruction Code Section -->
+        <VerticalStackLayout x:Name="DestructionSection" IsVisible="false" Spacing="10">
+            <Label Text="Setup Destruction Code (Use this code to hide all messages). You get them back when you disable the PIN codes"
+                   FontSize="16"
+                   TextColor="White" />
+
+            <Entry x:Name="DestructionEntry"
+                   Placeholder="Enter Destruction Code"
+                   PlaceholderColor="Gray"
+                   TextColor="White"
+                   BackgroundColor="#222"
+                   Completed="DestructionEntry_Completed"/>
+        </VerticalStackLayout>
+
+    </VerticalStackLayout>
+
+</ContentPage>

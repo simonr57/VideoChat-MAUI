@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>3D Model Gallery with Environments</title>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #main-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            z-index: 100;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Environment Gallery */
+        #environment-gallery-container {
+            position: absolute;
+            top: 0;
+            width: 100%;
+           
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+            padding: 10px 0;
+            box-sizing: border-box;
+        }
+        #environment-title {
+            padding: 5px 15px;
+            font-weight: bold;
+            color: #3498db;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #environment-gallery {
+            display: flex;
+            overflow-x: auto;
+            padding: 5px 10px;
+            gap: 12px;
+            height: 80px;
+            scrollbar-width: thin;
+            scrollbar-color: #3498db rgba(0, 0, 0, 0.5);
+        }
+        #environment-gallery::-webkit-scrollbar {
+            height: 6px;
+        }
+        #environment-gallery::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+        #environment-gallery::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 3px;
+        }
+        .environment-item {
+            min-width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+        .environment-item:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        .environment-item.active {
+            border-color: #e74c3c;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+        }
+        .environment-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            padding: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        /* Model Gallery */
+        #gallery-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+        #gallery {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            gap: 10px;
+            height: 100px;
+        }
+        .gallery-item {
+            min-width: 80px;
+    
+            background: #555;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .gallery-item:hover {
+            border-color: #3498db;
+            transform: scale(1.05);
+        }
+        .gallery-item.active {
+            border-color: #e74c3c;
+        }
+        .gallery-item .placeholder {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+        }
+        #controls {
+            display: flex;
+            padding: 10px;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        #search-container {
+            display: flex;
+            gap: 10px;
+        }
+        #search-input {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background: rgba(30, 30, 30, 0.8);
+            color: white;
+            width: 200px;
+        }
+        #search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        button {
+         
+            border: none;
+            border-radius: 4px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        #show-more {
+			
+            background: #2ecc71;
+			margin-left: 10px;
+        }
+        #show-more:hover {
+            background: #27ae60;
+        }
+        #title {
+            position: absolute;
+            top: 130px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 15px;
+            border-radius: 4px;
+            z-index: 100;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+        }
+        #environment-info {
+            position: absolute;
+            top: 130px;
+            right: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 15px;
+            border-radius: 4px;
+            z-index: 100;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            max-width: 300px;
+        }
+        #fps-counter {
+            position: absolute;
+            bottom: 160px;
+            right: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 4px;
+            z-index: 100;
+            font-size: 12px;
+        }
+        
+        .bigBtn {
+            height: 50px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+		
+		
+		
+        <canvas id="main-canvas"></canvas>
+        <div id="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+        
+        <!-- Environment Gallery -->
+        <div id="environment-gallery-container">
+            <div id="environment-gallery"></div>
+			           <div id="controls">
+                            <div id="search-container">
+                                <input type="text" id="search-input" placeholder="Search by type...">
+                                <button id="search-btn">Search</button>
+                                <button id="start-capture">Record GIF</button>
+                                <button id="stop-capture" disabled>Stop & Save</button>
+                            </div>
+
+            </div>
+        </div>
+        
+
+        <div id="environment-info"></div>
+        <div id="fps-counter">FPS: 60</div>
+        
+        <div id="gallery-container">
+            <div id="controls">
+                <div id="search-container">
+                    <button class="bigBtn" id="send-btn">Send</button>
+                </div>
+                <button class="bigBtn" id="show-more">Load more</button>
+            </div>
+            <div id="gallery"></div>
+        </div>
+    </div>
+
+    <script>
+        const url = window.location.href;
+        const urlObj = new URL(url);
+        const params1 = new URLSearchParams(urlObj.search);
+        const storeIdQueryString = params1.get('storeId');
+        const danceTypeQueryString = params1.get('danceType');
+        const _backendURL = "https://your-backend.azurewebsites.net/";
+        // Animation IDs list
+        let animationIds = [
+       
+        ];
+
+        
+        async function loadAnimationIds() {
+            try {
+                const response = await fetch(_backendURL+'api/Manager/getfn'); // update the port if needed
+                if (!response.ok) {
+                    throw new Error(`API call failed with status ${response.status}`);
+                }
+
+                const data = await response.json(); // array of strings without .glb
+                animationIds = data
+            } catch (error) {
+                console.error("Failed to load animation IDs:", error);
+            }
+        }
+        
+        
+        
+        // State management
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentModel = null;
+        let mixer = null;
+        let filteredAnimationIds = [];
+        let currentEnvironment = null;
+        let environmentObjects = [];
+        let textureCache = {};
+        let lastTime = 0;
+        let frameCount = 0;
+        let fps = 60;
+        
+
+  
+
+    </script>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "../build/three.module.js",
+					"three/addons/": "./jsm/"
+				}
+			}
+		</script>
+
+
+        <!-- USE THESE CDNs INSTEAD -->
+<script src="../view/addon/gif/gif.js"></script>
+<script src="../view/addon/CCapture.all.min.js"></script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+        import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+        // Scene setup
+        const canvas = document.getElementById('main-canvas');
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas, 
+            antialias: true,
+            alpha: true,
+            preserveDrawingBuffer: true // ADD THIS LINE
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x121212);
+        
+        const camera = new THREE.PerspectiveCamera(17, window.innerWidth / window.innerHeight, 0.1, 100);
+		
+        camera.position.set(0, 4, 20);
+        
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 0.7, 0);
+        controls.update();
+        controls.enablePan = false;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+		
+
+		
+
+        
+        const currentPolar = controls.getPolarAngle();
+        controls.minPolarAngle = currentPolar;
+        controls.maxPolarAngle = currentPolar;
+
+
+        // Lighting
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 3);
+        hemiLight.position.set(0, 20, 0);
+        scene.add(hemiLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(3, 10, 10);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        scene.add(dirLight);
+        
+        // Clock for animations
+        const clock = new THREE.Clock();
+        
+        // Loaders
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('../view/addon/draco/');
+        
+        const loader = new GLTFLoader();
+        loader.setDRACOLoader(dracoLoader);
+        
+        const rgbeLoader = new RGBELoader();
+        
+        // DOM Elements
+        const gallery = document.getElementById('gallery');
+        const environmentGallery = document.getElementById('environment-gallery');
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const sendBtn = document.getElementById('send-btn');
+        
+        const showMoreBtn = document.getElementById('show-more');
+        const titleElement = document.getElementById('title');
+        const environmentInfo = document.getElementById('environment-info');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const fpsCounter = document.getElementById('fps-counter');
+
+        // Environment definitions
+        const environments = [
+			            {
+                id: 'default0',
+                name: 'White',
+                description: '',
+                setup: function() {
+                    scene.background = new THREE.Color(0xffffff);
+                    
+                    // Add a simple ground
+                
+                 
+                 
+                    
+                    return null;
+                }
+            },
+            {
+                id: 'default',
+                name: 'Default',
+                description: '',
+                setup: function() {
+                    scene.background = new THREE.Color(0x121212);
+                    
+                    // Add a simple ground
+                    const groundGeometry = new THREE.PlaneGeometry(20, 20);
+                    const groundMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x333333,
+                        roughness: 0.8,
+                        metalness: 0.2
+                    });
+                    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                    ground.rotation.x = -Math.PI / 2;
+                    ground.position.y = -0.5;
+                    ground.receiveShadow = true;
+                    scene.add(ground);
+                    
+                    // Add grid helper
+                    const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+                    gridHelper.position.y = -0.49;
+                    scene.add(gridHelper);
+                    
+                    return [ground, gridHelper];
+                }
+            },
+            {
+                id: 'forest',
+                name: 'Forest',
+                description: '',
+                setup: function() {
+                    // Sky gradient
+                    const skyColor = new THREE.Color(0x87CEEB);
+                    const groundColor = new THREE.Color(0x6B8E23);
+                    scene.background = new THREE.Color(skyColor);
+                    
+                    // Ground with grass texture
+                    const groundGeometry = new THREE.PlaneGeometry(50, 50);
+                    const groundMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x4CAF50,
+                        roughness: 0.9,
+                        metalness: 0
+                    });
+                    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                    ground.rotation.x = -Math.PI / 2;
+                    ground.position.y = -0.5;
+                    ground.receiveShadow = true;
+                    scene.add(ground);
+                    
+                    // Create trees
+                    const trees = [];
+                    const treeGeometry = new THREE.CylinderGeometry(0.3, 0.8, 4, 8);
+                    const treeMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+                    const leavesGeometry = new THREE.ConeGeometry(2, 4, 8);
+                    const leavesMaterial = new THREE.MeshStandardMaterial({ color: 0x228833 });
+                    
+                    for (let i = 0; i < 20; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const radius = 8 + Math.random() * 12;
+                        const x = Math.cos(angle) * radius;
+                        const z = Math.sin(angle) * radius;
+                        
+                        const tree = new THREE.Group();
+                        
+                        const trunk = new THREE.Mesh(treeGeometry, treeMaterial);
+                        trunk.position.y = 2;
+                        trunk.castShadow = true;
+                        tree.add(trunk);
+                        
+                        const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                        leaves.position.y = 4.5;
+                        leaves.castShadow = true;
+                        tree.add(leaves);
+                        
+                        tree.position.set(x, -0.5, z);
+                        scene.add(tree);
+                        trees.push(tree);
+                    }
+                    
+                    // Add fog for depth
+                    scene.fog = new THREE.FogExp2(0x87CEEB, 0.02);
+                    
+                    return [ground, ...trees];
+                }
+            },
+            {
+                id: 'desert',
+                name: 'Desert',
+                description: '',
+                setup: function() {
+                    // Sky color
+                    scene.background = new THREE.Color(0xF0E68C);
+                    
+                    // Desert ground
+                    const groundGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
+                    groundGeometry.rotateX(-Math.PI / 2);
+                    
+                    // Create dunes with displacement
+                    const positions = groundGeometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const x = positions[i];
+                        const z = positions[i + 2];
+                        positions[i + 1] = Math.sin(x * 0.2) * Math.cos(z * 0.2) * 2;
+                    }
+                    groundGeometry.computeVertexNormals();
+                    
+                    const groundMaterial = new THREE.MeshStandardMaterial({
+                        color: 0xD2B48C,
+                        roughness: 1,
+                        metalness: 0
+                    });
+                    
+                    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                    ground.position.y = -1;
+                    ground.receiveShadow = true;
+                    scene.add(ground);
+                    
+                    // Sun light
+                    const sunLight = new THREE.DirectionalLight(0xFFD700, 1.5);
+                    sunLight.position.set(10, 20, 10);
+                    scene.add(sunLight);
+                    
+                    // Add fog for depth
+                    scene.fog = new THREE.FogExp2(0xF0E68C, 0.01);
+                    
+                    return [ground, sunLight];
+                }
+            },
+            {
+                id: 'snow',
+                name: 'Snow',
+                description: '',
+                setup: function() {
+                    // Sky color
+                    scene.background = new THREE.Color(0xB0E0E6);
+                    
+                    // Snow ground
+                    const groundGeometry = new THREE.PlaneGeometry(50, 50);
+                    const groundMaterial = new THREE.MeshStandardMaterial({
+                        color: 0xFFFFFF,
+                        roughness: 0.9,
+                        metalness: 0.1
+                    });
+                    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                    ground.rotation.x = -Math.PI / 2;
+                    ground.position.y = -0.5;
+                    ground.receiveShadow = true;
+                    scene.add(ground);
+                    
+                    // Create pine trees
+                    const trees = [];
+                    const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, 3, 8);
+                    const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+                    const leavesGeometry = new THREE.ConeGeometry(1.5, 4, 8);
+                    const leavesMaterial = new THREE.MeshStandardMaterial({ color: 0x2E8B57 });
+                    
+                    for (let i = 0; i < 15; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const radius = 5 + Math.random() * 15;
+                        const x = Math.cos(angle) * radius;
+                        const z = Math.sin(angle) * radius;
+                        
+                        const tree = new THREE.Group();
+                        
+                        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                        trunk.position.y = 1.5;
+                        trunk.castShadow = true;
+                        tree.add(trunk);
+                        
+                        for (let j = 0; j < 3; j++) {
+                            const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                            leaves.position.y = 3 + j * 2;
+                            leaves.scale.set(1 - j * 0.2, 1 - j * 0.2, 1 - j * 0.2);
+                            leaves.castShadow = true;
+                            tree.add(leaves);
+                        }
+                        
+                        tree.position.set(x, -0.5, z);
+                        scene.add(tree);
+                        trees.push(tree);
+                    }
+                    
+                    // Add fog for depth
+                    scene.fog = new THREE.Fog(0xB0E0E6, 5, 30);
+                    
+                    return [ground, ...trees];
+                }
+            },
+            {
+                id: 'beach',
+                name: 'Beach',
+                description: '',
+                setup: function() {
+                    // Sky color
+                    scene.background = new THREE.Color(0x87CEEB);
+                    
+                    // Beach sand
+                    const sandGeometry = new THREE.PlaneGeometry(40, 40);
+                    const sandMaterial = new THREE.MeshStandardMaterial({
+                        color: 0xF4A460,
+                        roughness: 0.8
+                    });
+                    const sand = new THREE.Mesh(sandGeometry, sandMaterial);
+                    sand.rotation.x = -Math.PI / 2;
+                    sand.position.y = -0.5;
+                    sand.position.z = -10;
+                    sand.receiveShadow = true;
+                    scene.add(sand);
+                    
+                    // Ocean
+                    const oceanGeometry = new THREE.PlaneGeometry(50, 50);
+                    const oceanMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x1E90FF,
+                        roughness: 0.2,
+                        metalness: 0.8,
+                        transparent: true,
+                        opacity: 0.8
+                    });
+                    const ocean = new THREE.Mesh(oceanGeometry, oceanMaterial);
+                    ocean.rotation.x = -Math.PI / 2;
+                    ocean.position.y = +0.2;
+                    ocean.position.z = 30;
+                    ocean.receiveShadow = false;
+                    scene.add(ocean);
+                    
+                    // Palm trees
+                    const trees = [];
+                    const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, 5, 8);
+                    const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+                    
+                    for (let i = 0; i < 8; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const radius = 8 + Math.random() * 8;
+                        const x = Math.cos(angle) * radius;
+                        const z = Math.sin(angle) * radius - 15;
+                        
+                        const tree = new THREE.Group();
+                        
+                        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                        trunk.position.y = 2.5;
+                        trunk.castShadow = true;
+                        tree.add(trunk);
+                        
+                        // Leaves
+                        for (let j = 0; j < 4; j++) {
+                            const leafGeometry = new THREE.ConeGeometry(1.5, 4, 4);
+                            const leafMaterial = new THREE.MeshStandardMaterial({ color: 0x228833 });
+                            const leaves = new THREE.Mesh(leafGeometry, leafMaterial);
+                            leaves.position.y = 5;
+                            leaves.rotation.y = j * Math.PI / 2;
+                            leaves.castShadow = true;
+                            tree.add(leaves);
+                        }
+                        
+                        tree.position.set(x, -0.5, z);
+                        scene.add(tree);
+                        trees.push(tree);
+                    }
+                    
+                    return [sand, ocean, ...trees];
+                }
+            },
+            {
+                id: 'space',
+                name: 'Space',
+                description: '',
+                setup: function() {
+                    // Black background
+                    scene.background = new THREE.Color(0x000011);
+                    
+                    // Stars
+                    const starsGeometry = new THREE.BufferGeometry();
+                    const starsMaterial = new THREE.PointsMaterial({
+                        color: 0xFFFFFF,
+                        size: 0.1,
+                        sizeAttenuation: true
+                    });
+                    
+                    const starsVertices = [];
+                    for (let i = 0; i < 5000; i++) {
+                        const x = (Math.random() - 0.5) * 200;
+                        const y = (Math.random() - 0.5) * 200;
+                        const z = (Math.random() - 0.5) * 200;
+                        starsVertices.push(x, y, z);
+                    }
+                    
+                    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+                    const stars = new THREE.Points(starsGeometry, starsMaterial);
+                    scene.add(stars);
+                    
+                    // Planets
+                    const planets = [];
+                    
+                    // Earth-like planet
+                    const planetGeometry = new THREE.SphereGeometry(2, 32, 32);
+                    const planetMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x3498db,
+                        roughness: 0.8,
+                        metalness: 0.2
+                    });
+                    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+                    planet.position.set(10, 5, -15);
+                    planet.castShadow = true;
+                    scene.add(planet);
+                    planets.push(planet);
+                    
+                    // Moon
+                    const moonGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                    const moonMaterial = new THREE.MeshStandardMaterial({
+                        color: 0xDDDDDD,
+                        roughness: 0.9
+                    });
+                    const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+                    moon.position.set(13, 5, -15);
+                    moon.castShadow = true;
+                    scene.add(moon);
+                    planets.push(moon);
+                    
+                    // Directional light as sun
+                    const sunLight = new THREE.DirectionalLight(0xFFFFFF, 2);
+                    sunLight.position.set(-20, 30, -30);
+                    scene.add(sunLight);
+                    
+                    return [stars, ...planets, sunLight];
+                }
+            },
+            {
+                id: 'city',
+                name: 'City',
+                description: '',
+                setup: function() {
+                    // Night sky background
+                    scene.background = new THREE.Color(0x111133);
+                    
+                    // Ground (street)
+                    const groundGeometry = new THREE.PlaneGeometry(60, 60);
+                    const groundMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x333333,
+                        roughness: 0.9
+                    });
+                    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                    ground.rotation.x = -Math.PI / 2;
+                    ground.position.y = -0.5;
+                    ground.receiveShadow = true;
+                    scene.add(ground);
+                    
+                    // Road
+                    const roadGeometry = new THREE.PlaneGeometry(10, 60);
+                    const roadMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x222222,
+                        roughness: 0.8
+                    });
+                    const road = new THREE.Mesh(roadGeometry, roadMaterial);
+                    road.rotation.x = -Math.PI / 2;
+                    road.position.y = -0.49;
+                    road.receiveShadow = true;
+                    scene.add(road);
+                    
+                    // Road markings
+                    const markings = [];
+                    for (let i = -25; i < 25; i += 4) {
+                        const markingGeometry = new THREE.PlaneGeometry(0.5, 2);
+                        const markingMaterial = new THREE.MeshStandardMaterial({
+                            color: 0xFFFF00
+                        });
+                        const marking = new THREE.Mesh(markingGeometry, markingMaterial);
+                        marking.rotation.x = -Math.PI / 2;
+                        marking.position.y = -0.48;
+                        marking.position.z = i;
+                        scene.add(marking);
+                        markings.push(marking);
+                    }
+                    
+                    // Buildings
+                    const buildings = [];
+                    for (let i = -25; i < 25; i += 8) {
+                        if (Math.abs(i) < 5) continue; // Skip center
+                        
+                        for (let j = -25; j < 25; j += 8) {
+                            if (Math.abs(j) < 5) continue;
+                            
+                            const height = 5 + Math.random() * 15;
+                            const width = 4 + Math.random() * 4;
+                            const depth = 4 + Math.random() * 4;
+                            
+                            const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+                            const buildingMaterial = new THREE.MeshStandardMaterial({
+                                color: Math.random() * 0xAAAAAA,
+                                emissive: Math.random() * 0x333333,
+                                roughness: 0.7
+                            });
+                            
+                            const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+                            building.position.set(i, height/2 - 0.5, j);
+                            building.castShadow = true;
+                            building.receiveShadow = true;
+                            scene.add(building);
+                            buildings.push(building);
+                            
+                            // Windows
+                            const windowGroup = new THREE.Group();
+                            for (let k = 1; k < height; k += 1.5) {
+                                for (let s = -1; s <= 1; s += 2) {
+                                    const windowGeometry = new THREE.PlaneGeometry(0.8, 0.8);
+                                    const windowMaterial = new THREE.MeshStandardMaterial({
+                                        color: Math.random() > 0.5 ? 0xFFFF99 : 0x99CCFF,
+                                        emissive: Math.random() > 0.5 ? 0x222200 : 0x001133,
+                                        side: THREE.DoubleSide
+                                    });
+                                    const window = new THREE.Mesh(windowGeometry, windowMaterial);
+                                    window.position.set(s * (width/2 + 0.01), k - height/2, 0);
+                                    window.rotation.y = s * Math.PI/2;
+                                    windowGroup.add(window);
+                                }
+                            }
+                            building.add(windowGroup);
+                        }
+                    }
+                    
+                    return [ground, road, ...markings, ...buildings];
+                }
+            },
+            {
+                id: 'mountain',
+                name: 'Mountain',
+                description: '',
+                setup: function() {
+                    // Sky color
+                    scene.background = new THREE.Color(0x87CEEB);
+                    
+                    // Mountain terrain
+                    const terrainGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
+                    terrainGeometry.rotateX(-Math.PI / 2);
+                    
+                    // Create mountainous terrain with displacement
+                    const positions = terrainGeometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const x = positions[i];
+                        const z = positions[i + 2];
+                        // Generate peaks and valleys
+                        const height = 10 * Math.exp(-(x*x + z*z)/800) * 
+                                      Math.sin(x * 0.1) * Math.cos(z * 0.15);
+                        positions[i + 1] = height;
+                    }
+                    terrainGeometry.computeVertexNormals();
+                    
+                    const terrainMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x8B4513,
+                        roughness: 0.9,
+                        metalness: 0.1
+                    });
+                    
+                    const terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
+                    terrain.position.y = -5;
+                    terrain.receiveShadow = true;
+                    scene.add(terrain);
+                    
+                    // Snow on peaks
+                    const snowGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
+                    snowGeometry.rotateX(-Math.PI / 2);
+                    
+                    const snowPositions = snowGeometry.attributes.position.array;
+                    for (let i = 0; i < snowPositions.length; i += 3) {
+                        const x = snowPositions[i];
+                        const z = snowPositions[i + 2];
+                        const height = 10 * Math.exp(-(x*x + z*z)/800) * 
+                                      Math.sin(x * 0.1) * Math.cos(z * 0.15);
+                        snowPositions[i + 1] = height > 3 ? height + 0.5 : -10;
+                    }
+                    snowGeometry.computeVertexNormals();
+                    
+                    const snowMaterial = new THREE.MeshStandardMaterial({
+                        color: 0xFFFFFF,
+                        roughness: 0.8,
+                        metalness: 0.1
+                    });
+                    
+                    const snow = new THREE.Mesh(snowGeometry, snowMaterial);
+                    snow.position.y = -5;
+                    snow.receiveShadow = true;
+                    scene.add(snow);
+                    
+                    // Add fog for depth
+                    scene.fog = new THREE.FogExp2(0x87CEEB, 0.01);
+                    
+                    return [terrain, snow];
+                }
+            },
+            {
+                id: 'underwater',
+                name: 'Underwater',
+                description: '',
+                setup: function() {
+                    // Water background
+                    scene.background = new THREE.Color(0x006994);
+                    
+                    // Ocean floor
+                    const floorGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
+                    floorGeometry.rotateX(-Math.PI / 2);
+                    
+                    // Create ocean floor with displacement
+                    const positions = floorGeometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const x = positions[i];
+                        const z = positions[i + 2];
+                        positions[i + 1] = Math.sin(x * 0.2) * Math.cos(z * 0.2) * 2 - 8;
+                    }
+                    floorGeometry.computeVertexNormals();
+                    
+                    const floorMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x8B4513,
+                        roughness: 0.9
+                    });
+                    
+                    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                    floor.position.y = -10;
+                    floor.receiveShadow = true;
+                    scene.add(floor);
+                    
+                    // Coral formations
+                    const corals = [];
+                    for (let i = 0; i < 30; i++) {
+                        const coral = new THREE.Group();
+                        const height = 1 + Math.random() * 3;
+                        
+                        // Coral trunk
+                        const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.3, height, 8);
+                        const trunkMaterial = new THREE.MeshStandardMaterial({
+                            color: Math.random() > 0.5 ? 0xFF6B6B : 0x4ECDC4
+                        });
+                        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                        trunk.position.y = height/2;
+                        coral.add(trunk);
+                        
+                        // Coral branches
+                        for (let j = 0; j < 5; j++) {
+                            const branchGeometry = new THREE.ConeGeometry(0.2, 0.8, 5);
+                            const branchMaterial = new THREE.MeshStandardMaterial({
+                                color: Math.random() > 0.5 ? 0xFF6B6B : 0x4ECDC4
+                            });
+                            const branch = new THREE.Mesh(branchGeometry, branchMaterial);
+                            branch.position.y = height - 0.4;
+                            branch.rotation.z = Math.random() * Math.PI;
+                            branch.rotation.y = Math.random() * Math.PI * 2;
+                            coral.add(branch);
+                        }
+                        
+                        // Position coral
+                        const angle = Math.random() * Math.PI * 2;
+                        const radius = 10 + Math.random() * 30;
+                        const x = Math.cos(angle) * radius;
+                        const z = Math.sin(angle) * radius;
+                        coral.position.set(x, -10, z);
+                        coral.rotation.y = Math.random() * Math.PI * 2;
+                        scene.add(coral);
+                        corals.push(coral);
+                    }
+                    
+                    // Add fog for underwater effect
+                    scene.fog = new THREE.FogExp2(0x006994, 0.03);
+                    
+                    return [floor, ...corals];
+                }
+            }
+        ];
+
+        // Initialization
+        await loadAnimationIds();
+        filteredAnimationIds = [...animationIds];
+                //here
+        // Add these variables at the top of your script
+let capturer;
+let isCapturing = false;
+const captureDuration = 2; // seconds
+
+// Initialize capturer
+function initCapturer() {
+    capturer = new CCapture({
+        format: 'gif',
+        workersPath: '../view/addon/gif/', // CORRECT PATH
+        framerate: 25,
+        quality: 45,
+        verbose: true
+    });
+}
+
+// function initCapturer() {
+//     capturer = new window.CCapture({  // Use window.CCapture
+//         format: 'gif',
+//         workersPath: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/',
+//         framerate: 25,
+//         quality: 90,
+//         verbose: true
+//     });
+// }
+
+// Start capturing
+function startCapture() {
+    if (!capturer) initCapturer();
+    capturer.start();
+    isCapturing = true;
+    document.getElementById('stop-capture').disabled = false;
+    document.getElementById('start-capture').disabled = true;
+    
+    // Auto-stop after duration
+    setTimeout(() => {
+        if (isCapturing) stopCapture();
+    }, captureDuration * 1000);
+}
+
+// Stop capturing and save
+// function stopCapture() {
+//     console.log("das");
+//     isCapturing = false;
+//     capturer.stop();
+//     capturer.save((blob) => {
+//         const url = URL.createObjectURL(blob);
+//         const a = document.createElement('a');
+//         a.href = url;
+//         a.download = 'dance-animation.gif';
+//         document.body.appendChild(a);
+//         a.click();
+//         document.body.removeChild(a);
+        
+//         // Reset buttons
+//         document.getElementById('stop-capture').disabled = true;
+//         document.getElementById('start-capture').disabled = false;
+//     });
+// }
+
+function stopCapture() {
+    isCapturing = false;
+    capturer.stop();
+    capturer.save((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            const base64data = reader.result;
+           window.location.href = `js-message://downloadGif?value=${encodeURIComponent(base64data)}`;
+        };
+        reader.readAsDataURL(blob);
+    });
+}
+        
+        initGalleries();
+        setupEventListeners();
+        setEnvironment('default');
+        
+        // If danceType is provided in query string, load that model
+        if (danceTypeQueryString) {
+            loadMainModel(danceTypeQueryString);
+        }
+
+        function initGalleries() {
+            renderGallery();
+            renderEnvironmentGallery();
+        }
+        
+        function renderEnvironmentGallery() {
+            environmentGallery.innerHTML = '';
+            
+            environments.forEach(env => {
+                const envItem = document.createElement('div');
+                envItem.className = 'environment-item';
+                envItem.dataset.id = env.id;
+                envItem.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://via.placeholder.com/70x70/333333/666666?text=${encodeURIComponent(env.name)}')`;
+                
+                const envName = document.createElement('div');
+                envName.className = 'environment-name';
+                envName.textContent = env.name;
+                
+                envItem.appendChild(envName);
+                
+                envItem.addEventListener('click', () => {
+                    // Remove active class from all items
+                    document.querySelectorAll('.environment-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // Add active class to clicked item
+                    envItem.classList.add('active');
+                    // Set the environment
+                    setEnvironment(env.id);
+                });
+                
+                environmentGallery.appendChild(envItem);
+            });
+            
+            // Set default environment as active
+            document.querySelector('.environment-item[data-id="default"]').classList.add('active');
+        }
+        
+        function setEnvironment(envId) {
+            // Remove previous environment objects
+            environmentObjects.forEach(obj => {
+                scene.remove(obj);
+            });
+            environmentObjects = [];
+            
+            // Clear fog
+            scene.fog = null;
+            
+            // Find the environment
+            const env = environments.find(e => e.id === envId);
+            if (!env) return;
+            
+            // Set the environment
+            currentEnvironment = env;
+            const envObjects = env.setup();
+            if (envObjects) {
+                environmentObjects = envObjects;
+            }
+            
+            // Update environment info
+            environmentInfo.textContent = env.description;
+            
+            // Update title if we have a model
+            if (currentModel) {
+                const animationId = currentModel.userData.animationId;
+                const danceType = animationId.split('__')[1];
+     
+            }
+        }
+        
+        function renderGallery() {
+            gallery.innerHTML = '';
+            const startIdx = 0;
+            const endIdx = currentPage * itemsPerPage;
+            const itemsToShow = filteredAnimationIds.slice(startIdx, endIdx);
+            
+            itemsToShow.forEach(animationId => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.dataset.id = animationId;
+                
+                const danceType = animationId.split('__')[1];
+                galleryItem.innerHTML = `<div class="placeholder">${danceType}</div>`;
+                
+                galleryItem.addEventListener('click', () => {
+                    // Remove active class from all items
+                    document.querySelectorAll('.gallery-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // Add active class to clicked item
+                    galleryItem.classList.add('active');
+                    // Load the model
+                    loadMainModel(animationId);
+                });
+                
+                gallery.appendChild(galleryItem);
+            });
+            
+            // Show/hide "Show More" button
+            showMoreBtn.style.display = filteredAnimationIds.length > endIdx ? 'block' : 'none';
+        }
+        
+        function setupEventListeners() {
+            // Search functionality
+            searchBtn.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+            
+            // Show more button
+            showMoreBtn.addEventListener('click', () => {
+                currentPage++;
+                renderGallery();
+            });
+            
+            sendBtn.addEventListener('click', () => {
+                let num = currentModel.userData.animationId +':'+currentEnvironment.id;
+                console.log(num);
+                window.location.href = `js-message://myVar?value=${encodeURIComponent(num)}`;
+                renderGallery();
+            });
+            
+            
+            // Window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+             // ===== ADD THESE NEW EVENT LISTENERS =====
+    document.getElementById('start-capture').addEventListener('click', startCapture);
+    document.getElementById('stop-capture').addEventListener('click', stopCapture);
+        }
+        
+        function handleSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredAnimationIds = [...animationIds];
+            } else {
+                filteredAnimationIds = animationIds.filter(id => {
+                    const danceType = id.split('__')[1].toLowerCase();
+                    return danceType.includes(searchTerm);
+                });
+            }
+            
+            currentPage = 1;
+            renderGallery();
+        }
+        
+        function adjustModelPosition(model) {
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.y = -box.min.y;
+        }
+        
+        function loadMainModel(animationId) {
+            loadingSpinner.style.display = 'block';
+            
+            // Clear previous model
+            if (currentModel) {
+                scene.remove(currentModel);
+                if (mixer) {
+                    mixer.stopAllAction();
+                    mixer = null;
+                }
+            }
+            
+            const apiUrl = `${_backendURL}api/Manager/down/Chars/${animationId}`;
+            
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error(`Failed to fetch model: ${response.statusText}`);
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    return new Promise((resolve, reject) => {
+                        loader.load(url, resolve, undefined, reject);
+                    });
+                })
+                .then(gltf => {
+                    const model = gltf.scene;
+                    model.scale.set(0.01, 0.01, 0.01);
+                    
+                    // Adjust model position so it stands on the ground
+                    adjustModelPosition(model);
+                    
+                    scene.add(model);
+                    currentModel = model;
+                    currentModel.userData = { animationId };
+                    
+                    // Set up animation
+                    mixer = new THREE.AnimationMixer(model);
+                    if (gltf.animations.length > 0) {
+                        mixer.clipAction(gltf.animations[0]).play();
+                    }
+                    
+                    // Update title
+                    const danceType = animationId.split('__')[1];
+            
+                    
+                    loadingSpinner.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error("Error loading model:", error);
+                    loadingSpinner.style.display = 'none';
+                    console.log(`Failed to load model: ${animationId}`);
+                });
+        }
+        
+        // FPS counter
+        function updateFPS() {
+            frameCount++;
+            const now = performance.now();
+            const delta = now - lastTime;
+            
+            if (delta >= 1000) {
+                fps = Math.round((frameCount * 1000) / delta);
+                fpsCounter.textContent = `FPS: ${fps}`;
+                frameCount = 0;
+                lastTime = now;
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            if (mixer) mixer.update(delta);
+            controls.update();
+            renderer.render(scene, camera);
+                // Capture frame if recording
+            if (isCapturing) {
+                capturer.capture(renderer.domElement);
+            }
+            updateFPS();
+        }
+        
+        lastTime = performance.now();
+        animate();
+    </script>
+</body>
+</html>

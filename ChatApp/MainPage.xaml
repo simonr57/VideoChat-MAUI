@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.MainPage"
+             BackgroundColor="Black">
+    <StackLayout Padding="10" Spacing="10">
+
+         <Entry x:Name="PinInput"
+     Placeholder="Enter PIN"
+     PlaceholderColor="Gray"
+     TextColor="White"
+     BackgroundColor="#222"
+     HeightRequest="55"
+     WidthRequest="220"
+     IsVisible="False"
+     HorizontalOptions="Center"
+     VerticalOptions="CenterAndExpand"
+     FontSize="20"
+     HorizontalTextAlignment="Center"
+         Completed="PinInput_Completed"
+     />
+
+        <CollectionView x:Name="OnlineUsersListView" 
+                       ItemsSource="{Binding UsersFromFire}" 
+                       VerticalOptions="FillAndExpand">
+            <CollectionView.EmptyView>
+                <Label Text="Loading..." 
+                       x:Name="LoadingLbl" 
+                       HorizontalOptions="Center" 
+                       TextColor="WhiteSmoke" 
+                       VerticalOptions="Center" 
+                       FontSize="Medium"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0" ColumnSpacing="1" BackgroundColor="Transparent">
+                        <!-- Define columns for layout -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Story Border Container -->
+                        <Grid Grid.Column="0" 
+                              WidthRequest="56" 
+                              HeightRequest="56" 
+                              HorizontalOptions="Center" 
+                              VerticalOptions="Center">
+
+                            <!-- Instagram-like Story Border (Conditional) -->
+                            <Frame x:Name="StoryBorder"
+                                   WidthRequest="56"
+                                   HeightRequest="56"
+                                   CornerRadius="28"
+                                   Padding="0"
+                                   IsVisible="{Binding IsStory}">
+                                <Frame.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <!-- Instagram story gradient colors -->
+                                        <GradientStop Color="#833AB4" Offset="0.1"/>
+                                        <GradientStop Color="#C13584" Offset="0.3"/>
+                                        <GradientStop Color="#E1306C" Offset="0.5"/>
+                                        <GradientStop Color="#FD1D1D" Offset="0.7"/>
+                                        <GradientStop Color="#F56040" Offset="0.8"/>
+                                        <GradientStop Color="#F77737" Offset="0.9"/>
+                                        <GradientStop Color="#FCAF45" Offset="1.0"/>
+                                        <GradientStop Color="#FFDC80" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                            </Frame>
+
+                            <!-- Profile Picture Frame -->
+                            <Frame WidthRequest="50" 
+                                   HeightRequest="50" 
+                                   CornerRadius="25" 
+                                   BorderColor="White"
+                                   IsClippedToBounds="True" 
+                                   Padding="-10"
+                                   
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center">
+                                <Image Source="{Binding ImageSource}">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnStoryButtonClicked" 
+                                                             CommandParameter="{Binding Username}" />
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Frame>
+                        </Grid>
+
+                        <!-- Rest of your existing content -->
+                        <Frame Grid.Column="1" 
+                               BorderColor="Black" 
+                             
+                               >
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnChatButtonClicked" 
+                                                     CommandParameter="{Binding Username}" />
+                            </Frame.GestureRecognizers>
+                            <StackLayout>
+
+                                <Label Text="{Binding Username}" 
+                                       HeightRequest="20"
+                                TextColor="WhiteSmoke" 
+                                FontSize="15">
+                                </Label>
+
+                                <Label Text="{Binding LatestMessage.Text}" 
+                                   FontSize="12" 
+                                   >
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" 
+                                                 Binding="{Binding LatestMessage.IsRead}" 
+                                                 Value="False">
+                                            <Setter Property="FontAttributes" Value="Bold" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>

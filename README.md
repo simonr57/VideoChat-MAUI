@@ -1,12 +1,9 @@
 A chat app with video calls - VideoChat, VideoCalls
 
-### For full code contact
-simonbinyamin@gmail.com
-
-
+![Screenshot](Imgs/s3.png)
 ![Screenshot](Imgs/s1.png)
 ![Screenshot](Imgs/s2.png)
-![Screenshot](Imgs/s3.png)
+
 
 
 ### To test the app
@@ -22,7 +19,7 @@ Currently only working when two devices are on the same wifi since we have disab
 to make PC-to-Android or PC-to-PC calls first make a POST Request to
 
 ```
-https://chatbe1285.azurewebsites.net/api/auth/Login
+https://your-backend.azurewebsites.net/api/auth/Login
 
 body {
     "Username": "your_username",
@@ -34,7 +31,7 @@ body {
 Once you have the Bearer token simply open our frontend and insert it as a Cookie
 
 ```
-URL: https://chatfe5415.azurewebsites.net/call/
+URL: https://your-frontend.azurewebsites.net/call/
 Cookie
 sessionId: ebeayJhbGciO....
 ```
@@ -43,8 +40,8 @@ In order to make a call you have to define your username and the target username
 if however you are receiving a call only your username is needed
 
 ```
-https://chatfe5415.azurewebsites.net/call/?key=adam&callerkey=brian //call someone
-https://chatfe5415.azurewebsites.net/call/?key=adam //receiving a call
+https://your-frontend.azurewebsites.net/call/?key=adam&callerkey=brian //call someone
+https://your-frontend.azurewebsites.net/call/?key=adam //receiving a call
 ```
 
  

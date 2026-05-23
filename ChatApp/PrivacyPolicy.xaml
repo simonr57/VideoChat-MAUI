@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.PrivacyPolicy"
+             BackgroundColor="Black"
+             Title="Privacy Policy">
+    <ScrollView>
+    <VerticalStackLayout>
+        <Label 
+            Text="1. Information We Collect"
+             />
+        <Label Text="1.1 User Credentials" />
+        <Label Text="We collect your username and password to enable account creation and login. Passwords are hashed and encrypted before being stored." />
+        <Label Text="" />
+        <Label Text="1.2 Device Information" />
+        <Label Text="We collect your Device ID solely for the purpose of sending push notifications. The Device ID is stored securely and is not shared with third parties." />
+        <Label Text="" />
+        <Label Text="2. Communication and Messaging" />
+        <Label Text="2.1 Message Storage and Handling" />
+            <Label Text="All messages are end-to-end encrypted. Messages are never stored on any central server. They are stored on the sender’s and receiver’s device. If a recipient is offline, the message is temporarily stored but encrypted. These temporarily stored messages are automatically deleted once the recipient comes online and receives them." />
+        <Label Text="" />
+        <Label Text="2.2 Voice and Video Calls" />
+        <Label Text="The Calls are end-to-end encrypted and no call content is stored on any server. The signaling server is also protected with authentication." />
+        <Label Text="" />
+        <Label Text="3. Security and Encryption" />
+        <Label Text="All sensitive data including tokens, private/public keys, and messages are securely encrypted, whether at rest or in transit." />
+        <Label Text="" />
+        <Label Text="4. Notifications" />
+        <Label Text="Notifications only indicate the presence of a new message and do not contain any message content." />
+        <Label Text="" />
+        <Label Text="5. Data Sharing" />
+        <Label Text="We do not share your personal data with third parties. We do not use your data for marketing, analytics, or profiling purposes." />
+
+        <Label Text="" />
+        <Label Text="6. Data Retention" />
+        <Label Text="Temporary encrypted messages stored are deleted immediately after delivery. Locally stored messages remain on your device and are your responsibility." />
+
+
+        <Label Text="" />
+        <Label Text="7. User Control and Access" />
+        <Label Text="You can delete your account and associated data by contacting support or using the in-app feature if available. We do not retain any backups of your messages, so deleted messages cannot be recovered." />
+
+
+        <Label Text="" />
+        <Label Text="8. Children's Privacy" />
+        <Label Text="The App is not intended for use by children under the age of 18. We do not knowingly collect personal information from children." />
+
+
+
+        <Label Text="" />
+        <Label Text="GDPR Compliance (for Users in the European Union)" />
+        <Label Text="If you are located in the European Economic Area (EEA), the processing of your personal data is subject to the General Data Protection Regulation (GDPR). This section provides additional information about your rights and our obligations under GDPR." />
+        <Label Text="1. Legal Basis for Processing" />
+        <Label Text="We process your personal data on the following legal grounds: Performance of a contract: To provide you with chat and call functionality. Consent: For optional services such as push notifications. Legitimate interests: To ensure the security, performance, and functionality of our services." />
+
+            <Label Text="" />
+            <Label Text="2. Your Rights Under GDPR" />
+
+        <Label Text="Right to Access – You can request a copy of your personal data we hold.
+Right to Rectification – You may request correction of inaccurate or incomplete data.
+Right to Erasure – You can request deletion of your personal data (the “right to be forgotten”).
+Right to Restrict Processing – You may ask us to limit how we process your data in certain circumstances.
+Right to Data Portability – You may request to receive your personal data in a structured, commonly used format.
+Right to Object – You can object to processing based on our legitimate interests.
+Right to Lodge a Complaint – You have the right to file a complaint with your local data protection authority." />
+
+
+            <Label Text="However, Usernames and Device IDs and even passwords are fundamental to system integrity, therefore, changing them (if requested by the user) would disrupt key app functionality like authentication, encryption keys, or push notifications. We are therefore and according to Article 12(2) - Recital 59 not required to comply with the request if doing so would seriously impair the service or be impossible" />
+            <Label Text="[chit.cg@outlook.com]" />
+            <Label Text="" />
+            <Label Text="3. Data Transfers Outside the EU" />
+
+        <Label Text="Some of your personal data may be processed by cloudservices located outside the EEA. When this occurs, we ensure appropriate safeguards are in place, such as Standard Contractual Clauses (SCCs) approved by the European Commission, to protect your data." />
+            <Label Text="" />
+            <Label Text="4. Data Retention" />
+        <Label Text="We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected, or as required by applicable laws. For example:
+Temporary encrypted messages stored, are deleted once the recipient comes online and receives them.
+Locally stored messages remain on your device under your control.
+Your account credentials and Device ID are stored securely to enable login and push notifications, respectively." />
+
+
+        <Label Text="" />
+
+        <Label Text="5. Data Protection Contact" />
+        <Label Text="If you have questions about this policy or your data rights, or wish to file a request under GDPR, please contact our privacy team:" />
+            <Label Text="[chit.cg@outlook.com]" />
+
+    </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

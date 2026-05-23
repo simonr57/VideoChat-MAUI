@@ -1,0 +1,75 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatApp.CheckUserName"
+             BackgroundColor="Black">
+
+    <Grid>
+
+        <!-- Original centered content -->
+        <StackLayout 
+                     VerticalOptions="Center" 
+                     HorizontalOptions="CenterAndExpand">
+            <ScrollView IsVisible="{Binding IsRegistering}" HeightRequest="200">
+                <VerticalStackLayout>
+                    <Label TextColor="WhiteSmoke" Text="*By accessing or using our chat application, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you must not use the App." />
+                    <Label TextColor="WhiteSmoke" Text="" />
+                    <Label TextColor="WhiteSmoke" Text="1. Eligibility" />
+                    <Label TextColor="WhiteSmoke" Text="You must be at least 18 years old to use this App. By using the App, you represent and warrant that:" />
+                    <Label TextColor="WhiteSmoke" Text="You are 18 years of age or older." />
+                    <Label TextColor="WhiteSmoke" Text="You will comply with these Terms and all applicable laws and regulations." />
+
+                    <Label TextColor="WhiteSmoke" Text="" />
+                    <Label TextColor="WhiteSmoke" Text="2. User Conduct" />
+                    <Label TextColor="WhiteSmoke" Text="You agree not to:" />
+                    <Label TextColor="WhiteSmoke" Text="Use the App for any illegal or unauthorized purpose." />
+                    <Label TextColor="WhiteSmoke" Text="Harass, abuse, threaten, or impersonate other users." />
+                    <Label TextColor="WhiteSmoke" Text="Share or distribute any inappropriate, obscene, or harmful content." />
+                    <Label TextColor="WhiteSmoke" Text="Violate the privacy or intellectual property rights of others." />
+                    <Label TextColor="WhiteSmoke" Text="We reserve the right to suspend or ban any user who violates these rules." />
+                    <Label TextColor="WhiteSmoke" Text="" />
+                    <Label TextColor="WhiteSmoke" Text="3. Privacy" />
+                    <Label TextColor="WhiteSmoke" Text="We respect your privacy. By using the App, you consent to the collection and use of your data in accordance with our Privacy Policy." />
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <HorizontalStackLayout IsVisible="{Binding IsRegistering}" HorizontalOptions="Start">
+                <CheckBox Color="WhiteSmoke" x:Name="checkbox1" />
+                <Label TextColor="WhiteSmoke" Text="I accept the terms and conditions." VerticalOptions="Center"  />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout IsVisible="{Binding IsRegistering}" HorizontalOptions="Start">
+                <CheckBox Color="WhiteSmoke" x:Name="checkboxAge" />
+                <Label TextColor="WhiteSmoke" Text="I am at least 18 years old." VerticalOptions="Center"  />
+            </HorizontalStackLayout>
+
+            <Entry x:Name="UserInput" 
+                   Placeholder="Enter your name"
+                   WidthRequest="350"
+                   HeightRequest="70"
+                   TextColor="WhiteSmoke"
+                   HorizontalOptions="Center" />
+
+            <Entry x:Name="PasswordEntry" 
+                   HeightRequest="70"   
+                   WidthRequest="350" 
+                   Placeholder="Password"
+                   IsPassword="True"
+                   TextColor="WhiteSmoke"
+                   Completed="OnEntryCompleted"/>
+
+            <Label x:Name="ErrorLabel"
+                   TextColor="WhiteSmoke"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   Margin="0,50,0,0" />
+
+            <Label x:Name="SuccessLabel"
+                   TextColor="WhiteSmoke"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   Margin="0,5,0,0" />
+        </StackLayout>
+    </Grid>
+</ContentPage>
+

@@ -1,0 +1,220 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundColor="Black"
+             Loaded="OnPageLoaded"
+             x:Class="ChatApp.StartChat">
+
+    <Grid x:Name="MainGrid" BackgroundColor="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.9*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <CollectionView Grid.Row="0" x:Name="MessagesCollectionView"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            BackgroundColor="Black"
+                            ItemsSource="{Binding Messages}"
+                            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+
+                        <Frame Grid.Column="1"
+                           Margin="0,5,5,0"
+                           Padding="0"
+                           BorderColor="Black"
+                               BackgroundColor="Black"
+                           HorizontalOptions="End"
+                           IsVisible="{Binding IsClient}">
+
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame" Binding="{Binding ShowWebView}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="Black" />
+                                </DataTrigger>
+
+                            </Frame.Triggers>
+
+                            <StackLayout Orientation="Horizontal" Spacing="5">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnStackLayoutTapped" CommandParameter="{Binding Id}" />
+                                </StackLayout.GestureRecognizers>
+
+
+
+                                <Image Source="seen.svg" IsVisible="{Binding IsDelivered}"></Image>
+                                <Image Source="isokfromhttpfirebase.svg" IsVisible="{Binding IsOkFromHttpFirebase}"></Image>
+                                <Image Source="isokfromnotification.svg" IsVisible="{Binding IsOkFromNotification}"></Image>
+
+                                <ActivityIndicator 
+                                   x:Name="LoadingIndicator"
+                                   IsRunning="{Binding IsSending}"
+                                   IsVisible="{Binding IsSending}"
+                                   Color="Black"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   WidthRequest="30"
+                                   HeightRequest="30"
+  
+                               />
+
+                                <Frame
+                                  InputTransparent="True"
+                                CornerRadius="30"
+                                BorderColor="#4B0082"
+                                HorizontalOptions="End"
+                                BackgroundColor="#4B0082"
+                                    
+                                IsVisible="{Binding ShowTextOnly}">
+                                    <Label Text="{Binding Text}"
+                                        FontSize="14"
+                                                FontFamily="Calibri"
+                                        TextColor="White"
+                                        LineBreakMode="WordWrap"
+                                        MaxLines="0"
+                                        VerticalOptions="Center"
+                                        HorizontalTextAlignment="End"
+                                        HorizontalOptions="EndAndExpand"
+                               
+                                        MaximumWidthRequest="200">
+                                    </Label>
+
+                                </Frame>
+                                <!-- WebView or Placeholder -->
+                                <ContentView>
+                                    <ContentView.Triggers>
+                                        <DataTrigger TargetType="ContentView" Binding="{Binding ShowWebView}" Value="True">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <WebView BackgroundColor="Black" HeightRequest="400" WidthRequest="280" 
+                                         Source="{Binding Url}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </ContentView.Triggers>
+                                </ContentView>
+
+                            </StackLayout>
+
+
+                        </Frame>
+                        <!--for the other-->
+                        <Frame Grid.Column="0"
+                          Margin="0,0,0,0"
+                           Padding="5"
+                           BorderColor="Black"
+                               BackgroundColor="Black"
+                           HorizontalOptions="Start"
+                           IsVisible="{Binding IsClient, Mode=OneWay}">
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame" Binding="{Binding IsClient}" Value="False">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame" Binding="{Binding IsClient}" Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame" Binding="{Binding IsView}" Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame" Binding="{Binding ShowWebView}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="Black" />
+                                </DataTrigger>
+
+                            </Frame.Triggers>
+
+                            <StackLayout Orientation="Horizontal" Spacing="5">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnStackLayoutTapped" CommandParameter="{Binding Id}" />
+                                </StackLayout.GestureRecognizers>
+
+                                <Frame InputTransparent="True"
+                                      
+                                      CornerRadius="30"
+                                      HorizontalOptions="Start"
+                                      BackgroundColor="DarkSlateGray"
+                                    IsVisible="{Binding ShowTextOnly}">
+                                    <Label Text="{Binding Text}"
+                                         FontSize="14"
+                                               FontFamily="Calibri"
+                                         TextColor="AntiqueWhite"
+                                         LineBreakMode="WordWrap"
+                                         MaxLines="0"
+                                               VerticalOptions="Center"
+                                         HorizontalTextAlignment="Start"
+                                         HorizontalOptions="StartAndExpand"
+                                         MaximumWidthRequest="200">
+                                    </Label>
+                                </Frame>
+                                <ContentView>
+                                    <ContentView.Triggers>
+                                        <DataTrigger TargetType="ContentView" Binding="{Binding ShowWebView}" Value="True">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <WebView HeightRequest="400" WidthRequest="280" 
+                                         Source="{Binding Url}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </ContentView.Triggers>
+                                </ContentView>
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Entry and Send Button -->
+        <StackLayout BackgroundColor="Black" Grid.Row="1" Orientation="Horizontal" Padding="10">
+            
+
+            <Entry BackgroundColor="Black" TextColor="WhiteSmoke" x:Name="MessageEntry"
+                      Placeholder="Type a message..."
+                      VerticalOptions="Center"
+                      Completed="SendMessageButton_Clicked"
+                      HorizontalOptions="FillAndExpand"
+                      Margin="0,0,0,0"/>
+
+            <Button 
+                x:Name="sendbtn"
+                ImageSource="send.svg"
+                TextColor="WhiteSmoke"
+                Clicked="SendMessageButton_Clicked"
+                WidthRequest="50" HeightRequest="50"
+                BackgroundColor="Black" 
+                VerticalOptions="Center"/>
+
+            <Button 
+                x:Name="avatarbtn"
+                 ImageSource="dance.svg"
+                Clicked="ShowDanceBtn"
+                WidthRequest="50" HeightRequest="50"
+                BackgroundColor="Black" 
+                VerticalOptions="Center"/>
+
+            <Button 
+                x:Name="avatarbtn2"
+                 ImageSource="img.svg"
+                Clicked="OnPickImageClicked"
+                WidthRequest="50" HeightRequest="50"
+                BackgroundColor="Black" 
+                VerticalOptions="Center"/>
+
+
+        </StackLayout>
+
+        <!-- Context Menu -->
+        <StackLayout x:Name="ContextMenu"
+             IsVisible="False"
+             Background="GhostWhite"        
+             Padding="1"
+             VerticalOptions="End"
+             HorizontalOptions="Center">
+        </StackLayout>
+    </Grid>
+</ContentPage>
+    
+    
+    
+ 

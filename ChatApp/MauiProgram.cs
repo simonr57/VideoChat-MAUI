@@ -1,12 +1,12 @@
+﻿using ChatApp.Database;
+using ChatApp.External;
+using ChatApp.Workers;
+using CommunityToolkit.Maui;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 #if ANDROID
 using ChatApp.Platforms.Android;
 #endif
-using ChatApp.Database;
-using ChatApp.External;
-using CommunityToolkit.Maui;
-using Microsoft.EntityFrameworkCore;
-using ChatApp.Workers;
-using Microsoft.Extensions.Logging;
 
 namespace ChatApp
 {
@@ -16,28 +16,29 @@ namespace ChatApp
         {
             var builder = MauiApp.CreateBuilder();
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite($"Filename={Path.Combine(FileSystem.AppDataDirectory, "app.db")}"));
+                options.UseSqlite($"Filename={Path.Combine(FileSystem.AppDataDirectory, "app.db")}")
+            );
             builder.Services.AddSingleton<FirebaseService>();
             builder.Services.AddSingleton<SyncService>();
             builder
                 .UseMauiApp<App>()
                 .ConfigureMauiHandlers(handlers =>
                 {
-                    #if ANDROID
+#if ANDROID
                     handlers.AddHandler(typeof(WebView), typeof(CustomWebViewHandler));
-                    #endif
+#endif
                 })
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
-                    {
-                        fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                        fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                    });
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                });
 
             builder.Services.AddHostedService<MyBackgroundService>();
-            #if DEBUG
+#if DEBUG
             builder.Logging.AddDebug();
-            #endif
+#endif
             return builder.Build();
         }
     }

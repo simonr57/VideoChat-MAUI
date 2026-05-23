@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="ChatApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ChatApp"
+    Shell.FlyoutBehavior="Flyout"
+    Title="ChatApp">
+
+    <Shell.FlyoutHeader>
+        <StackLayout Padding="10">
+            <!-- Profile Picture (using a predefined image for now) -->
+            <Image x:Name="imgProfile" WidthRequest="350" HeightRequest="350" Aspect="AspectFill" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnProfileTapped" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Label x:Name="LblUsername"></Label>
+        </StackLayout>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Home">
+        <Tab>
+            <ShellContent Title="Home"  ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Find Friends">
+        <Tab>
+            <ShellContent Title="Find Friends"  ContentTemplate="{DataTemplate local:FindFriends}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Friends Requests">
+        <Tab>
+            <ShellContent Title="Friends Requests"  ContentTemplate="{DataTemplate local:FriendsRequests}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Invite Friends">
+        <Tab>
+            <ShellContent Title="Invite Friends"  ContentTemplate="{DataTemplate local:ContactListVy}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Privacy Policy">
+        <Tab>
+            <ShellContent Title="Privacy Policy"  ContentTemplate="{DataTemplate local:PrivacyPolicy}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Setup PIN Code">
+        <Tab>
+            <ShellContent Title="Setup PIN Code"  ContentTemplate="{DataTemplate local:PinSetup}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Logout">
+        <Tab>
+            <ShellContent Title="Logout"  ContentTemplate="{DataTemplate local:Logout}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Delete Account">
+        <Tab>
+            <ShellContent Title="Delete Account"  ContentTemplate="{DataTemplate local:DeleteAccount}" />
+        </Tab>
+    </FlyoutItem>
+</Shell>
